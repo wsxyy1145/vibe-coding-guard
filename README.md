@@ -103,16 +103,21 @@ Expand-Archive .\vibe-coding-guard.zip -DestinationPath "$env:USERPROFILE\.workb
 
 ## 使用示例
 
-vibe 出来一段代码，AI 在交付前自动插入：
+### 真实案例：199 行的"史山"注册 API
+
+完整反面教材 → [`examples/bad_v0_register.py`](./examples/bad_v0_register.py)（199 行，单文件一把梭）。
+
+vibe 出来那一刻**没拦**，结果 AI 在交付前自动插入了这段：
 
 > 🏔️ **史山预警**
 >
-> 刚 vibe 完 `vibe_register.py`（199 行），强制自检了一遍，**4 个维度全中招**：
+> 刚 vibe 完 `bad_v0_register.py`（199 行），强制自检了一遍，**4 个维度全中招**：
 >
 > 🔴 **P0：硬伤（必改）**
 > - `register()` 第 92 行 `except Exception as e: return jsonify({"error": str(e)})` —— 直接把异常原文甩给用户，安全漏洞
 > - `send_welcome_email()` 第 67 行 `except: pass` —— 吞错本尊，SMTP 挂了你都不知道
 > - 密码用 `sha256(password + salt)` —— 无迭代无慢哈希，GPU 一秒跑几十亿次
+> - 登录接口没有速率限制 —— 撞库分分钟
 >
 > 🟠 **P1：结构问题**
 > - `register()` 单函数 65 行，从校验、查重、落库、发邮件、写审计日志全干了
@@ -125,6 +130,31 @@ vibe 出来一段代码，AI 在交付前自动插入：
 
 风格：**幽默吐槽 + 具体行号 + 可执行拆法**。不油腻、不说教、不爹味。
 
+### 整改后（节选）
+
+把上面那个 199 行的史山按 P0+P1 拆完，应该长这样（节选）：
+
+```
+register-api/
+├── app.py                  # Flask 入口，仅 30 行
+├── api/
+│   └── auth.py            # HTTP 层：参数解析 + 响应
+├── services/
+│   ├── user_service.py    # 业务：注册 / 登录
+│   ├── email_service.py   # 发邮件，吞错日志
+│   └── audit_service.py   # 审计日志写文件
+├── db/
+│   ├── user_repo.py       # DAO：所有 SQL 在这
+│   └── schema.sql
+├── security/
+│   ├── password.py        # argon2 哈希
+│   └── rate_limit.py      # 登录限流
+└── tests/
+    └── test_register.py   # 关键路径测试
+```
+
+—— 同样的功能，5 个文件，每个文件单一职责，错误能被定位、能被测试、能在生产告警。
+
 ---
 
 ## 仓库结构
@@ -135,8 +165,15 @@ vibe-coding-guard/
 ├── references/
 │   ├── code-smell-catalog.md     # 反模式目录（按需加载）
 │   └── refactor-playbook.md      # 重构手法手册（按需加载）
+├── examples/
+│   └── bad_v0_register.py        # 史山反面教材（199 行）
+├── .github/
+│   ├── ISSUE_TEMPLATE/           # bug / feature / new_smell 三选
+│   ├── workflows/validate-skill.yml  # CI：frontmatter + refs 校验
+│   └── pull_request_template.md
 ├── LICENSE                        # Apache 2.0
 ├── CHANGELOG.md
+├── CONTRIBUTING.md                # 贡献指南（文件分工 + SemVer）
 └── README.md                      # 本文件
 ```
 
