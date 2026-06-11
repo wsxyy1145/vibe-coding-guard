@@ -1,6 +1,13 @@
 # vibe-coding-guard 🏔️
 
+[![GitHub stars](https://img.shields.io/github/stars/wsxyy1145/vibe-coding-guard?style=social)](https://github.com/wsxyy1145/vibe-coding-guard/stargazers)
+[![Latest Release](https://img.shields.io/github/v/release/wsxyy1145/vibe-coding-guard)](https://github.com/wsxyy1145/vibe-coding-guard/releases)
+[![License: Apache 2.0](https://img.shields.io/github/license/wsxyy1145/vibe-coding-guard)](https://github.com/wsxyy1145/vibe-coding-guard/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/wsxyy1145/vibe-coding-guard)](https://github.com/wsxyy1145/vibe-coding-guard/issues)
+
 > 别再 vibe 出史山了。
+
+[English](#) · [简体中文](./README.md)
 
 **vibe-coding-guard** 是一个通用的 vibe coding 质量拦截 skill。
 让 AI 在交付代码前强制做一次 pre-flight self-review，把"史山预警"以吐槽 + 整改清单的形式摆出来，**不允许假装没看见**。

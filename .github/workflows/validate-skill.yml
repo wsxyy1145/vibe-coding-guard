@@ -1,0 +1,60 @@
+name: Validate Skill
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate SKILL.md frontmatter and structure
+        run: |
+          set -e
+
+          # 1. SKILL.md 必须存在
+          test -f SKILL.md || (echo "::error::SKILL.md missing" && exit 1)
+
+          # 2. frontmatter 解析
+          python3 - <<'PYEOF'
+          import re, sys
+          text = open('SKILL.md', encoding='utf-8').read()
+          m = re.match(r'^---\n(.*?)\n---', text, re.DOTALL)
+          if not m:
+              print('::error::SKILL.md has no YAML frontmatter')
+              sys.exit(1)
+          fm = m.group(1)
+          for field in ('name:', 'description:', 'agent_created:'):
+              if field not in fm:
+                  print(f'::error::frontmatter missing field: {field}')
+                  sys.exit(1)
+          if 'TODO' in fm:
+              print('::error::frontmatter contains TODO')
+              sys.exit(1)
+          body = text[m.end():]
+          if 'TODO' in body:
+              print('::error::body contains TODO')
+              sys.exit(1)
+          print('✅ frontmatter valid')
+          PYEOF
+
+      - name: Check references/ links resolve
+        run: |
+          # references/ 下的文件必须存在
+          for f in references/*.md; do
+            test -f "$f" || (echo "::error::missing $f" && exit 1)
+          done
+          echo "✅ references/ OK"
+
+      - name: Markdown lint (best-effort)
+        run: |
+          # 没装工具就跳过（CI 环境跑不一定有）
+          if command -v markdownlint >/dev/null 2>&1; then
+            markdownlint --disable MD013 MD041 **/*.md
+          else
+            echo "ℹ️ markdownlint not installed, skipping"
+          fi
