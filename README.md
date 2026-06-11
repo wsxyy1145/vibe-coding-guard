@@ -9,6 +9,33 @@
 
 ---
 
+## 🏷️ GitHub Topics（建议在仓库 About 侧栏勾选）
+
+复制这一行到 GitHub 仓库的 "Topics" 输入框（建议选 5-10 个）：
+
+```
+ai coding agent code-review code-quality vibe-coding code-smells refactoring developer-tools linter best-practices
+```
+
+| Topic | 搜索量 | 为什么选 |
+|---|---|---|
+| `ai-coding` | 🔥🔥🔥 | 2025-2026 暴涨的垂直领域，是核心场景 |
+| `agent` | 🔥🔥🔥 | 跟 Claude Code / WorkBuddy / Cursor 撞关键词 |
+| `code-review` | 🔥🔥🔥 | 开发者主动搜索的高频词 |
+| `code-quality` | 🔥🔥 | 跟 lint / static-analysis 同区 |
+| `vibe-coding` | 🔥🔥 | 2025 年 Karpathy 提的概念，正在成主流 |
+| `code-smells` | 🔥 | 圈内人才搜，精准用户 |
+| `refactoring` | 🔥🔥 | 经典长青词 |
+| `developer-tools` | 🔥🔥🔥 | GitHub Explore 大类 |
+| `linter` | 🔥🔥 | 跟静态分析归类，曝光加分 |
+| `best-practices` | 🔥 | 模糊但搜索量大 |
+
+**避坑**：不要勾 `machine-learning` / `ai` / `gpt` 这种通用大词——会跟百万级仓库竞争，**搜不到你**。
+
+**GitHub 上限 20 个 topic**，但建议 ≤10：太多会被算法判为"keyword stuffing"，反而降权。
+
+---
+
 ## 这是什么
 
 "vibe coding" 是那种"让 AI 直接写吧，先跑起来再说"的工作流。
